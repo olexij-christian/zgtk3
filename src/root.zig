@@ -6,12 +6,10 @@ const split = std.mem.splitAny;
 const indexOf = std.mem.indexOf;
 const copy = std.mem.copyForwards;
 
-pub fn executeCommand(command: []const u8, comptime OUT_SIZE: comptime_int) ![OUT_SIZE]u8 {
+pub fn executeCommand(command: []const u8, comptime OUT_SIZE: comptime_int) !(if (OUT_SIZE > 0) [OUT_SIZE]u8 else void) {
     var err: *c.GError = undefined;
     var stdout: *c.gchar = undefined;
     defer c.g_free(stdout);
-
-    var res: [OUT_SIZE]u8 = undefined;
 
     // Execute the command
     if (c.g_spawn_command_line_sync(@ptrCast(command), @ptrCast(&stdout), null, null, @ptrCast(&err)) == 0) {
@@ -20,11 +18,14 @@ pub fn executeCommand(command: []const u8, comptime OUT_SIZE: comptime_int) ![OU
         return error.WhenExecution;
     }
 
-    if (c.strlen(stdout) > OUT_SIZE)
-        return error.SmallBufferSize;
+    if (OUT_SIZE > 0) {
+        if (c.strlen(stdout) > OUT_SIZE)
+            return error.SmallBufferSize;
 
-    _ = c.strncpy(&res, stdout, OUT_SIZE);
-    return res;
+        var res: [OUT_SIZE]u8 = undefined;
+        _ = c.strncpy(&res, stdout, OUT_SIZE);
+        return res;
+    }
 }
 
 pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
