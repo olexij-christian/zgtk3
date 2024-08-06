@@ -5,6 +5,7 @@ const eql = std.mem.eql;
 const split = std.mem.splitAny;
 const indexOf = std.mem.indexOf;
 const copy = std.mem.copyForwards;
+const startsWith = std.mem.startsWith;
 
 pub fn executeCommand(command: []const u8, comptime OUT_SIZE: comptime_int) !(if (OUT_SIZE > 0) [OUT_SIZE]u8 else void) {
     var err: *c.GError = undefined;
@@ -39,6 +40,8 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
         const is_args_property = comptime eql(u8, @as([]const u8, fid.name), "args");
         const is_children_property = comptime eql(u8, @as([]const u8, fid.name), "children");
         const is_packing_property = comptime eql(u8, @as([]const u8, fid.name), "packing");
+
+        const is_signal_connecting = comptime startsWith(u8, fid.name, "on");
 
         if (is_class_property or is_args_property or is_packing_property) {
             // do nothing
@@ -88,6 +91,22 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
                 } else {
                     result.callAs("container", "add", .{child_widget.native});
                 }
+            }
+        } else if (is_signal_connecting) {
+            const fn_tuple = switch (@typeInfo(fid.type)) {
+                .Struct => |args_struct| block: {
+                    if (args_struct.is_tuple)
+                        break :block @field(interface, fid.name)
+                    else
+                        @compileError("Signal must be function");
+                },
+                else => .{@field(interface, fid.name)},
+            };
+
+            // example onclick => click
+            const signal_name = fid.name[2..];
+            inline for (fn_tuple) |func| {
+                _ = g_signal_connect(result.native, signal_name, @ptrCast(&func), c.NULL);
             }
         } else {
             const fn_args = switch (@typeInfo(fid.type)) {
@@ -199,13 +218,13 @@ fn toUpperCase(text: []const u8) []const u8 {
 }
 
 /// Could not get `g_signal_connect` to work. Zig says "use of undeclared identifier". Reimplemented here
-pub fn g_signal_connect_(instance: c.gpointer, detailed_signal: [*c]const c.gchar, c_handler: c.GCallback, data: c.gpointer) c.gulong {
+pub fn g_signal_connect(instance: c.gpointer, detailed_signal: [*c]const c.gchar, c_handler: c.GCallback, data: c.gpointer) c.gulong {
     var zero: u32 = 0;
     const flags: *c.GConnectFlags = @ptrCast(&zero);
     return c.g_signal_connect_data(instance, detailed_signal, c_handler, data, null, flags.*);
 }
 
 /// Could not get `g_signal_connect_swapped` to work. Zig says "use of undeclared identifier". Reimplemented here
-pub fn g_signal_connect_swapped_(instance: c.gpointer, detailed_signal: [*c]const c.gchar, c_handler: c.GCallback, data: c.gpointer) c.gulong {
+pub fn g_signal_connect_swapped(instance: c.gpointer, detailed_signal: [*c]const c.gchar, c_handler: c.GCallback, data: c.gpointer) c.gulong {
     return c.g_signal_connect_data(instance, detailed_signal, c_handler, data, null, c.G_CONNECT_SWAPPED);
 }

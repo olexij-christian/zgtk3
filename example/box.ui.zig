@@ -1,5 +1,9 @@
 const c = @import("gtk").c;
 
+fn printHello() void {
+    @import("std").debug.print("Hello World!\n", .{});
+}
+
 pub const template = .{
     .class = "window",
     .args = .{c.GTK_WINDOW_TOPLEVEL},
@@ -24,6 +28,7 @@ pub const template = .{
                 .class = "button",
                 .@"widget:visible" = 1,
                 .@"button:label" = "First button",
+                .onclicked = .{ printHello, c.gtk_main_quit },
             },
             .{
                 .class = "button",
