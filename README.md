@@ -4,9 +4,8 @@ zgtk3 is a library currently in development that aims to implement GTK3 for the 
 
 ## Features
 
-- Planned: Complete GTK3 bindings for Zig
-- Planned: Easy-to-use API for building GUIs
-- Planned: Comprehensive documentation and examples
+- Build applications from templates as zig structures using `buildInterface()`
+- Run command-line commands more simply using `executeCommand()`
 
 ## Installation
 
