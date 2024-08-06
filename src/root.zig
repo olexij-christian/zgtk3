@@ -37,8 +37,9 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
         const is_class_property = comptime eql(u8, @as([]const u8, fid.name), "class");
         const is_args_property = comptime eql(u8, @as([]const u8, fid.name), "args");
         const is_children_property = comptime eql(u8, @as([]const u8, fid.name), "children");
+        const is_packing_property = comptime eql(u8, @as([]const u8, fid.name), "packing");
 
-        if (is_class_property or is_args_property) {
+        if (is_class_property or is_args_property or is_packing_property) {
             // do nothing
             // NOTE: "continue" statement dont work inside "inline for" statement
         } else if (is_children_property) {
@@ -47,14 +48,23 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
                 const is_class_grid = comptime eql(u8, interface.class, "grid");
                 const is_class_box = comptime eql(u8, interface.class, "box");
 
+                const child_widget = buildInterface(child_data);
                 if (is_class_grid) {
                     // TODO: write code with attach
                     @compileError("Grid is not supported yet");
                 } else if (is_class_box) {
-                    // TODO: write code with pack
-                    @compileError("Box is not supported yet");
+                    const has_packing_property = @hasField(@TypeOf(child_data), "packing");
+
+                    const has_expand_property = if (has_packing_property) @hasField(@TypeOf(child_data.packing), "expand") else false;
+                    const has_fill_property = if (has_packing_property) @hasField(@TypeOf(child_data.packing), "fill") else false;
+                    const has_padding_property = if (has_packing_property) @hasField(@TypeOf(child_data.packing), "padding") else false;
+
+                    const expand = if (has_expand_property) child_data.packing.expand else 0;
+                    const fill = if (has_fill_property) child_data.packing.fill else 0;
+                    const padding = if (has_padding_property) child_data.packing.padding else 0;
+
+                    result.callAs("box", "pack_start", .{ child_widget.native, expand, fill, padding });
                 } else {
-                    const child_widget = buildInterface(child_data);
                     result.callAs("container", "add", .{child_widget.native});
                 }
             }

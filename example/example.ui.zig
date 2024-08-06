@@ -9,8 +9,20 @@ pub const template = .{
     .@"widget:visible" = 1,
 
     .children = .{.{
-        .class = "button",
+        .class = "box",
+        .args = .{ c.GTK_ORIENTATION_VERTICAL, 5 },
+
         .@"widget:visible" = 1,
-        .@"button:label" = "Test",
+
+        .children = .{
+            .{
+                .class = "button",
+                .@"widget:visible" = 1,
+            },
+            .{
+                .class = "button",
+                .@"widget:visible" = 1,
+            },
+        },
     }},
 };
