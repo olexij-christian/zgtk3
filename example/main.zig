@@ -17,6 +17,7 @@ pub fn main() !u8 {
 
     _ = buildInterface(@import("example.ui.zig").template);
     _ = buildInterface(@import("status_icon.ui.zig").template);
+    _ = buildInterface(@import("grid.ui.zig").template);
 
     c.gtk_main();
 

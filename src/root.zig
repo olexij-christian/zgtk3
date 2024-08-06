@@ -50,8 +50,28 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
 
                 const child_widget = buildInterface(child_data);
                 if (is_class_grid) {
-                    // TODO: write code with attach
-                    @compileError("Grid is not supported yet");
+                    const has_packing_property = @hasField(@TypeOf(child_data), "packing");
+
+                    if (has_packing_property == false)
+                        @compileError("Child element of Grid has not \"packing\" property");
+
+                    const has_left_property = @hasField(@TypeOf(child_data.packing), "left");
+                    const has_top_property = @hasField(@TypeOf(child_data.packing), "top");
+                    const has_width_property = @hasField(@TypeOf(child_data.packing), "width");
+                    const has_height_property = @hasField(@TypeOf(child_data.packing), "height");
+
+                    if (has_left_property == false)
+                        @compileError("Packing property \"left\" is not defined");
+
+                    if (has_top_property == false)
+                        @compileError("Packing property \"top\" is not defined");
+
+                    const left = child_data.packing.left;
+                    const top = child_data.packing.top;
+                    const width = if (has_width_property) child_data.packing.width else 1;
+                    const height = if (has_height_property) child_data.packing.height else 1;
+
+                    result.callAs("grid", "attach", .{ child_widget.native, left, top, width, height });
                 } else if (is_class_box) {
                     const has_packing_property = @hasField(@TypeOf(child_data), "packing");
 
