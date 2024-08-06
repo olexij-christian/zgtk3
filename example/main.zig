@@ -15,7 +15,8 @@ const c = gtk.c;
 pub fn main() !u8 {
     c.gtk_init(0, null);
 
-    _ = buildInterface(@import("ui.zig").template);
+    _ = buildInterface(@import("example.ui.zig").template);
+    _ = buildInterface(@import("status_icon.ui.zig").template);
 
     c.gtk_main();
 

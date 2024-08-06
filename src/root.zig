@@ -4,6 +4,7 @@ const toUpper = std.ascii.toUpper;
 const eql = std.mem.eql;
 const split = std.mem.splitAny;
 const indexOf = std.mem.indexOf;
+const copy = std.mem.copyForwards;
 
 pub fn executeCommand(command: []const u8, comptime OUT_SIZE: comptime_int) ![OUT_SIZE]u8 {
     var err: *c.GError = undefined;
@@ -118,9 +119,44 @@ pub fn Widget(comptime widget_prefix: []const u8) type {
     };
 }
 
-// example: window -> GtkWindow
+fn String(comptime len: usize) type {
+    return struct {
+        str: [len]u8,
+        index: usize,
+
+        pub fn append(self: *@This(), new: []const u8) !void {
+            for (new) |char| {
+                if (self.index >= self.str.len)
+                    return error.OutOfMemory;
+                self.str[self.index] = char;
+                self.index += 1;
+            }
+        }
+
+        pub fn init() @This() {
+            return @This(){
+                .str = undefined,
+                .index = 0,
+            };
+        }
+    };
+}
+
+// example: window -> GtkWindow, status_icon -> GtkStatusIcon
 fn toGtkTypeName(widget_prefix: []const u8) []const u8 {
-    return "Gtk" ++ &[1]u8{toUpper(widget_prefix[0])} ++ widget_prefix[1..];
+    const GTK_NAME_PREFIX = "Gtk";
+
+    const number_of_separators = std.mem.count(u8, widget_prefix, "_");
+    var res = String(widget_prefix.len - number_of_separators + GTK_NAME_PREFIX.len).init();
+
+    res.append(GTK_NAME_PREFIX) catch unreachable;
+
+    var iterator = split(u8, widget_prefix, "_");
+    while (iterator.next()) |word| {
+        res.append(&[1]u8{toUpper(word[0])} ++ word[1..]) catch unreachable;
+    }
+
+    return res.str[0..];
 }
 
 fn toUpperCase(text: []const u8) []const u8 {
