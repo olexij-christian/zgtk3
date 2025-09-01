@@ -9,7 +9,20 @@ zgtk3 is a library currently in development that aims to implement GTK3 for the 
 
 ## Installation
 
-See in releases of project.
+To import zgtk3 to your project, run the following command:
+```bash
+zig fetch --save git+https://github.com/olexij-christian/zgtk3
+```
+
+Then set up the dependency in your build.zig:
+```zig
+const zgtk3_dep = b.dependency("zgtk3", .{
+    .target = target,
+    .optimize = optimize,
+})
+
+exe.root_module.addImport("zgtk3", zgtk3_dep.module("zgtk3"));
+```
 
 ## Usage
 
