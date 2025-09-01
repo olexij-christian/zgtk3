@@ -27,13 +27,14 @@ pub const template = .{
             .{
                 .class = "button",
                 .@"widget:visible" = 1,
-                .@"button:label" = "First button",
-                .onclicked = .{ printHello, c.gtk_main_quit },
+                .@"button:label" = "Print text",
+                .onclicked = printHello,
             },
             .{
                 .class = "button",
                 .@"widget:visible" = 1,
-                .@"button:label" = "Second button",
+                .@"button:label" = "Exit application",
+                .onclicked = c.gtk_main_quit,
             },
         },
     }},
