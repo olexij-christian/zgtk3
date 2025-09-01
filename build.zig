@@ -14,8 +14,7 @@ pub fn build(b: *std.Build) void {
     });
 
     zgtk3_module.linkSystemLibrary("c", .{});
-    zgtk3_module.linkSystemLibrary("gtk+-3.0", .{});
-    zgtk3_module.linkSystemLibrary("glib-2.0", .{});
+    zgtk3_module.linkSystemLibrary("gtk+-3.0", .{ .use_pkg_config = .force });
 
     const example = b.addExecutable(.{
         .name = "example",
