@@ -2,7 +2,7 @@ const std = @import("std");
 
 // NOTE: marked as pub because it using in applications
 //       for connecting with gtk api
-pub const c = @import("c.zig");
+pub const c = @import("c.zig").exports;
 
 const util = @import("util.zig");
 const g_signal_connect = util.g_signal_connect;
@@ -40,7 +40,7 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
     const args = if (@hasField(typeof_interface, "args")) interface.args else .{};
     const result = Widget(interface.class).init(args);
 
-    const fields = @typeInfo(typeof_interface).Struct.fields;
+    const fields = @typeInfo(typeof_interface).@"struct".fields;
     inline for (fields) |fid| {
         const is_class_property = comptime eql(u8, @as([]const u8, fid.name), "class");
         const is_args_property = comptime eql(u8, @as([]const u8, fid.name), "args");
@@ -100,7 +100,7 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
             }
         } else if (is_signal_connecting) {
             const fn_tuple = switch (@typeInfo(fid.type)) {
-                .Struct => |args_struct| block: {
+                .@"struct" => |args_struct| block: {
                     if (args_struct.is_tuple)
                         break :block @field(interface, fid.name)
                     else
@@ -116,7 +116,7 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
             }
         } else {
             const fn_args = switch (@typeInfo(fid.type)) {
-                .Struct => |args_struct| block: {
+                .@"struct" => |args_struct| block: {
                     if (args_struct.is_tuple)
                         break :block @field(interface, fid.name)
                     else
@@ -157,7 +157,7 @@ pub fn Widget(comptime WIDGET_PREFIX: []const u8) type {
         pub const GTK_FN_WIDGET_INIT = @field(c, FN_WIDGET_PREFIX ++ INIT_POSTFIX);
 
         // E: from function named "gtk_button_new" get return type "*GtkWidget"
-        native: (@typeInfo(@TypeOf(GTK_FN_WIDGET_INIT)).Fn.return_type orelse void),
+        native: (@typeInfo(@TypeOf(GTK_FN_WIDGET_INIT)).@"fn".return_type orelse void),
 
         // E: execute "gtk_button_new(...args)"
         pub fn init(args: anytype) @This() {
@@ -170,8 +170,8 @@ pub fn Widget(comptime WIDGET_PREFIX: []const u8) type {
             comptime custom_widget_prefix: []const u8,
             comptime method_name: []const u8,
             args: anytype,
-        ) (@typeInfo(@TypeOf(@field(c, GTK_PREFIX ++ SPR ++ custom_widget_prefix ++ SPR ++ method_name))).Fn.return_type orelse void) {
-            if (@typeInfo(@TypeOf(args)).Struct.is_tuple == false)
+        ) (@typeInfo(@TypeOf(@field(c, GTK_PREFIX ++ SPR ++ custom_widget_prefix ++ SPR ++ method_name))).@"fn".return_type orelse void) {
+            if (@typeInfo(@TypeOf(args)).@"struct".is_tuple == false)
                 @compileError("Arguments \"args\" is not indexable");
 
             const method = @field(c, GTK_PREFIX ++ SPR ++ custom_widget_prefix ++ SPR ++ method_name);
@@ -184,7 +184,7 @@ pub fn Widget(comptime WIDGET_PREFIX: []const u8) type {
             self: @This(),
             comptime method_name: []const u8,
             args: anytype,
-        ) (@typeInfo(@TypeOf(@field(c, FN_WIDGET_PREFIX ++ method_name))).Fn.return_type orelse void) {
+        ) (@typeInfo(@TypeOf(@field(c, FN_WIDGET_PREFIX ++ method_name))).@"fn".return_type orelse void) {
             return self.callAs(WIDGET_PREFIX, method_name, args);
         }
 

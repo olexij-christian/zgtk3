@@ -16,11 +16,15 @@ pub fn build(b: *std.Build) void {
     zgtk3_module.linkSystemLibrary("c", .{});
     zgtk3_module.linkSystemLibrary("gtk+-3.0", .{ .use_pkg_config = .force });
 
-    const example = b.addExecutable(.{
-        .name = "example",
+    const example_module = b.addModule("zgtk3", .{
         .root_source_file = b.path("example/main.zig"),
         .target = target,
         .optimize = optimize,
+    });
+
+    const example = b.addExecutable(.{
+        .name = "example",
+        .root_module = example_module,
     });
 
     example.root_module.addImport("gtk", zgtk3_module);

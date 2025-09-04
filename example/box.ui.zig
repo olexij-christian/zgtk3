@@ -1,7 +1,8 @@
 const c = @import("gtk").c;
 
 fn printHello() void {
-    @import("std").debug.print("Hello World!\n", .{});
+    // @import("std").debug.print("Hello World!\n", .{});
+    c.g_print("Hello World!\n");
 }
 
 pub const template = .{

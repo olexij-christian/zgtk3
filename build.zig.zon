@@ -1,10 +1,15 @@
 .{
-    .name = "zgtk3",
+    .name = .zgtk3,
     .version = "0.2.1",
 
     .minimum_zig_version = "0.15.1",
 
     .dependencies = .{},
 
-    .paths = .{""},
+    .paths = .{
+        "src",
+        "build.zig",
+        "build.zig.zon",
+    },
+    .fingerprint = 0xb990d33f8097d557,
 }

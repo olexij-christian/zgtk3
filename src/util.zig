@@ -1,4 +1,4 @@
-const c = @import("c.zig");
+const c = @import("c.zig").exports;
 const std = @import("std");
 const toUpper = std.ascii.toUpper;
 const split = std.mem.splitAny;
