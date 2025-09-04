@@ -104,7 +104,7 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
                     if (args_struct.is_tuple)
                         break :block @field(interface, fid.name)
                     else
-                        @compileError("Signal must be function");
+                        @compileError("Signal must be a function or tuple of functions");
                 },
                 else => .{@field(interface, fid.name)},
             };
