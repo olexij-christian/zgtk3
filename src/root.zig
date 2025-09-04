@@ -1,10 +1,16 @@
-pub const c = @import("c.zig");
 const std = @import("std");
-const toUpper = std.ascii.toUpper;
+
+// NOTE: marked as pub because it using in applications
+//       for connecting with gtk api
+pub const c = @import("c.zig");
+
+const util = @import("util.zig");
+const g_signal_connect = util.g_signal_connect;
+const toGtkTypeName = util.toGtkTypeName;
+
 const eql = std.mem.eql;
 const split = std.mem.splitAny;
 const indexOf = std.mem.indexOf;
-const copy = std.mem.copyForwards;
 const startsWith = std.mem.startsWith;
 
 pub fn executeCommand(command: []const u8, comptime OUT_SIZE: comptime_int) !(if (OUT_SIZE > 0) [OUT_SIZE]u8 else void) {
@@ -45,7 +51,7 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
 
         if (is_class_property or is_args_property or is_packing_property) {
             // do nothing
-            // NOTE: "continue" statement dont work inside "inline for" statement
+            // "continue" statement dont work inside "inline for" statement
         } else if (is_children_property) {
             const children = interface.children;
             inline for (children) |child_data| {
@@ -103,7 +109,7 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
                 else => .{@field(interface, fid.name)},
             };
 
-            // example onclick => click
+            // EXAMPLE: "onclick" -> "click"
             const signal_name = fid.name[2..];
             inline for (fn_tuple) |func| {
                 _ = g_signal_connect(result.native, signal_name, @ptrCast(&func), c.NULL);
@@ -132,23 +138,39 @@ pub fn buildInterface(comptime interface: anytype) Widget(interface.class) {
     return result;
 }
 
-pub fn Widget(comptime widget_prefix: []const u8) type {
+// NOTE: For better understating of functionality of this constructor
+//       using examples with WIDGET_PREFIX="button".
+//       Example notes marked as "E:"
+pub fn Widget(comptime WIDGET_PREFIX: []const u8) type {
     return struct {
         const GTK_PREFIX = "gtk";
         const INIT_POSTFIX = "new";
         const SPR = "_"; // separator
 
-        const GTK_TYPE_NAME = toGtkTypeName(widget_prefix);
+        // E: "gtk_button_"
+        const FN_WIDGET_PREFIX = GTK_PREFIX ++ SPR ++ WIDGET_PREFIX ++ SPR;
 
-        pub const METHOD = @field(c, GTK_PREFIX ++ SPR ++ widget_prefix ++ SPR ++ INIT_POSTFIX);
+        // E: "button" -> "GtkButton"
+        const GTK_TYPE_NAME = toGtkTypeName(WIDGET_PREFIX);
 
-        native: (@typeInfo(@TypeOf(METHOD)).Fn.return_type orelse void),
+        // E: save to variable function named "gtk_button_new"
+        pub const GTK_FN_WIDGET_INIT = @field(c, FN_WIDGET_PREFIX ++ INIT_POSTFIX);
 
+        // E: from function named "gtk_button_new" get return type "*GtkWidget"
+        native: (@typeInfo(@TypeOf(GTK_FN_WIDGET_INIT)).Fn.return_type orelse void),
+
+        // E: execute "gtk_button_new(...args)"
         pub fn init(args: anytype) @This() {
-            return @This(){ .native = @call(.auto, METHOD, args) };
+            return @This(){ .native = @call(.auto, GTK_FN_WIDGET_INIT, args) };
         }
 
-        pub fn callAs(self: @This(), comptime custom_widget_prefix: []const u8, comptime method_name: []const u8, args: anytype) (@typeInfo(@TypeOf(@field(c, GTK_PREFIX ++ SPR ++ custom_widget_prefix ++ SPR ++ method_name))).Fn.return_type orelse void) {
+        // E: execute "gtk_{custom_widget_prefix}_{method_name}(self.native, ...args)"
+        pub fn callAs(
+            self: @This(),
+            comptime custom_widget_prefix: []const u8,
+            comptime method_name: []const u8,
+            args: anytype,
+        ) (@typeInfo(@TypeOf(@field(c, GTK_PREFIX ++ SPR ++ custom_widget_prefix ++ SPR ++ method_name))).Fn.return_type orelse void) {
             if (@typeInfo(@TypeOf(args)).Struct.is_tuple == false)
                 @compileError("Arguments \"args\" is not indexable");
 
@@ -157,74 +179,20 @@ pub fn Widget(comptime widget_prefix: []const u8) type {
             return @call(.auto, method, .{self_native} ++ args);
         }
 
-        pub fn call(self: @This(), comptime method_name: []const u8, args: anytype) (@typeInfo(@TypeOf(@field(c, GTK_PREFIX ++ SPR ++ widget_prefix ++ SPR ++ method_name))).Fn.return_type orelse void) {
-            return self.callAs(widget_prefix, method_name, args);
+        // E: execute "gtk_button_{method_name}(self.native, ...args)"
+        pub fn call(
+            self: @This(),
+            comptime method_name: []const u8,
+            args: anytype,
+        ) (@typeInfo(@TypeOf(@field(c, FN_WIDGET_PREFIX ++ method_name))).Fn.return_type orelse void) {
+            return self.callAs(WIDGET_PREFIX, method_name, args);
         }
 
+        // E: Widget("button") + {widget_name} -> Widget({widget_name})
         pub fn to(self: @This(), comptime widget_name: []const u8) Widget(widget_name) {
             return Widget(widget_name){
                 .native = @ptrCast(self.native),
             };
         }
     };
-}
-
-fn String(comptime len: usize) type {
-    return struct {
-        str: [len]u8,
-        index: usize,
-
-        pub fn append(self: *@This(), new: []const u8) !void {
-            for (new) |char| {
-                if (self.index >= self.str.len)
-                    return error.OutOfMemory;
-                self.str[self.index] = char;
-                self.index += 1;
-            }
-        }
-
-        pub fn init() @This() {
-            return @This(){
-                .str = undefined,
-                .index = 0,
-            };
-        }
-    };
-}
-
-// example: window -> GtkWindow, status_icon -> GtkStatusIcon
-fn toGtkTypeName(widget_prefix: []const u8) []const u8 {
-    const GTK_NAME_PREFIX = "Gtk";
-
-    const number_of_separators = std.mem.count(u8, widget_prefix, "_");
-    var res = String(widget_prefix.len - number_of_separators + GTK_NAME_PREFIX.len).init();
-
-    res.append(GTK_NAME_PREFIX) catch unreachable;
-
-    var iterator = split(u8, widget_prefix, "_");
-    while (iterator.next()) |word| {
-        res.append(&[1]u8{toUpper(word[0])} ++ word[1..]) catch unreachable;
-    }
-
-    return res.str[0..];
-}
-
-fn toUpperCase(text: []const u8) []const u8 {
-    var res: [text.len]u8 = undefined;
-    for (text, 0..) |char, i| {
-        res[i] = toUpper(char);
-    }
-    return res;
-}
-
-/// Could not get `g_signal_connect` to work. Zig says "use of undeclared identifier". Reimplemented here
-pub fn g_signal_connect(instance: c.gpointer, detailed_signal: [*c]const c.gchar, c_handler: c.GCallback, data: c.gpointer) c.gulong {
-    var zero: u32 = 0;
-    const flags: *c.GConnectFlags = @ptrCast(&zero);
-    return c.g_signal_connect_data(instance, detailed_signal, c_handler, data, null, flags.*);
-}
-
-/// Could not get `g_signal_connect_swapped` to work. Zig says "use of undeclared identifier". Reimplemented here
-pub fn g_signal_connect_swapped(instance: c.gpointer, detailed_signal: [*c]const c.gchar, c_handler: c.GCallback, data: c.gpointer) c.gulong {
-    return c.g_signal_connect_data(instance, detailed_signal, c_handler, data, null, c.G_CONNECT_SWAPPED);
 }
