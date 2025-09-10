@@ -1,0 +1,86 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0" version="28.2.0">
+  <diagram name="Сторінка-1" id="7mjVmbzdpA_M0fSLKmhh">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="5spkvAqheqNrHkaexplL-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;curved=1;" edge="1" parent="1" source="5spkvAqheqNrHkaexplL-1" target="5spkvAqheqNrHkaexplL-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="503" y="800" />
+              <mxPoint x="330" y="800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-1" value="File: c.zig" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#e1d5e7;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="443" y="850" width="250" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-2" value="+ exports: @cImport(gtk.h, glib.h, string.h)" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="5spkvAqheqNrHkaexplL-1">
+          <mxGeometry y="26" width="250" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-9" value="File: util.zig" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#e1d5e7;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="120" y="850" width="280" height="178" as="geometry">
+            <mxRectangle x="160" y="280" width="100" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-10" value="+ toGtkTypeName(widget_prefix: string): string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="5spkvAqheqNrHkaexplL-9">
+          <mxGeometry y="26" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-15" value="&lt;div&gt;&amp;nbsp;&lt;b&gt;EXAMPLE&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&quot;window&quot; -&amp;gt; &quot;GtkWindow&quot;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&quot;status_icon&quot; -&amp;gt; &quot;GtkStatusIcon&quot;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=9;align=left;" vertex="1" parent="5spkvAqheqNrHkaexplL-9">
+          <mxGeometry y="52" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-11" value="+ toUpperCase(text: string): string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="5spkvAqheqNrHkaexplL-9">
+          <mxGeometry y="102" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-16" value="&lt;div&gt;&amp;nbsp;&lt;b&gt;EXAMPLE&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&quot;someword&quot; -&amp;gt; &quot;SOMEWORD&quot;&lt;/div&gt;&lt;div&gt;&amp;nbsp;&lt;span style=&quot;background-color: rgb(255, 255, 0);&quot;&gt;&lt;span style=&quot;background-color: rgb(255, 255, 0);&quot;&gt;TODO: more examples&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=9;align=left;" vertex="1" parent="5spkvAqheqNrHkaexplL-9">
+          <mxGeometry y="128" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-17" value="TODO: need testing" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="160" y="1080" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;shape=flexArrow;fillColor=#fff2cc;strokeColor=#d6b656;" edge="1" parent="1" source="5spkvAqheqNrHkaexplL-17" target="5spkvAqheqNrHkaexplL-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-19" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;File: root.zig&lt;/font&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#e1d5e7;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="148" y="640" width="570" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-23" value="+ Widget: TYPE" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;strokeColor=default;" vertex="1" parent="5spkvAqheqNrHkaexplL-19">
+          <mxGeometry y="26" width="570" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-20" value="+ executeCommand(command: string, &lt;span style=&quot;background-color: rgb(255, 255, 0);&quot;&gt;&lt;span style=&quot;background-color: rgb(255, 255, 0);&quot;&gt;OUT_SIZE: u8): string[OUT_SIZE] or void&lt;/span&gt;&lt;/span&gt;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="5spkvAqheqNrHkaexplL-19">
+          <mxGeometry y="52" width="570" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-22" value="+ buildInterface(TEMPLATE: anytype): Widget(TEMPLATE.class)&lt;span style=&quot;background-color: rgb(255, 255, 0);&quot;&gt;&lt;span style=&quot;background-color: rgb(255, 255, 0);&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/span&gt;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="5spkvAqheqNrHkaexplL-19">
+          <mxGeometry y="78" width="570" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-27" value="Widget(WIDGET_PREFIX: string)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="148" y="460" width="300" height="154" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-28" value="+ native: gtk_c_type" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="5spkvAqheqNrHkaexplL-27">
+          <mxGeometry y="26" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-37" value="&lt;div&gt;&amp;nbsp;Get type from WIDGET_PREFIX&lt;br&gt;&amp;nbsp;Use function toGtkTypeName() from util.zig&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=9;align=left;" vertex="1" parent="5spkvAqheqNrHkaexplL-27">
+          <mxGeometry y="52" width="300" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-29" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="5spkvAqheqNrHkaexplL-27">
+          <mxGeometry y="86" width="300" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-30" value="+ init(args: comptime_list): Widget" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="5spkvAqheqNrHkaexplL-27">
+          <mxGeometry y="94" width="300" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-31" value="&lt;div&gt;&amp;nbsp;Execute gtk_c_function &quot;_new&quot; type&lt;/div&gt;&lt;div&gt;&amp;nbsp;for component with name &quot;WIDGET_PREFIX&quot;&lt;br&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=9;align=left;" vertex="1" parent="5spkvAqheqNrHkaexplL-27">
+          <mxGeometry y="120" width="300" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.197;entryY=1.04;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="5spkvAqheqNrHkaexplL-9" target="5spkvAqheqNrHkaexplL-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.738;entryY=1.04;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="5spkvAqheqNrHkaexplL-1" target="5spkvAqheqNrHkaexplL-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5spkvAqheqNrHkaexplL-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.002;entryY=0.104;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" edge="1" parent="1" source="5spkvAqheqNrHkaexplL-23" target="5spkvAqheqNrHkaexplL-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
